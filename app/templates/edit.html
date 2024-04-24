@@ -1,0 +1,15 @@
+{% extends "posts_div.html" %}Edit {% block title %}Home{% endblock %} 
+{% block content%}
+<form action="/edit/{{article.id}}" method="POST">
+  <div class="form-group">
+    <h3>Edit Your Article</h3>
+  </div>
+  <div class="form-group">
+    <label for="text">Edit here</label>
+    <pre><textarea name="text" cols="50" rows="10" class="form-control">{{article.text}}</textarea></pre>
+  </div>
+  <div class="form-group">
+    <input type="submit" value="Save Changes" class="button" />
+  </div>
+</form>
+{% endblock content %}

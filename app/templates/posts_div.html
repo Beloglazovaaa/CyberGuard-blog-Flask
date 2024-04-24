@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title%}Home{% endblock %}
+{% block content %}
+<h2 align="center">{% block header %}Articles{% endblock %}</h2>
+<div id="posts">
+    {% for article in articles %}
+    <div class="card border-dark">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <a href="/posts/{{article.user.username}}">Author: {{article.user.username}}</a>
+          {% if user.id == article.author %}
+          <div class="btn-group">
+            <button typr="button" class="btn btn-sm btn-primary dropdown-toggle"
+            data-bs-toggle="dropdown"></button>
+            <ul class="dropdown-menu">
+                <li><a href="/delete-post/{{article.id}}" class="dropdown-item">Delete</a></li>
+                <li><a href="/edit/{{article.id}}" class="dropdown-item">edit</a></li>
+            </ul>
+          </div>
+          {% endif %}
+        </div>
+        <div class="card-body">
+            <div class="card-text">{{article.text}}</div>
+        </div>
+        <div class="card-footer text-muted">{{article.date_created}}</div>
+    </div>
+    <br/>
+    {% endfor %}
+</div>
+{% block footer %}
+<div align="center">
+    <a href="/create-posts"
+        ><button type="button" class="btn btn-dark btn-lg">
+            Create Article
+        </button></a>
+</div>   
+{% endblock %}
+
+{% endblock %}
