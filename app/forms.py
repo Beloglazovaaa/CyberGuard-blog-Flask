@@ -30,9 +30,3 @@ class RegistrationForm(FlaskForm):
 class ArticleForm(FlaskForm):
     text = TextAreaField('Text', validators=[DataRequired(message="Please enter the text for the article.")])
     submit = SubmitField('Submit')
-
-class ContactForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    subject = StringField('Subject', validators=[DataRequired()])
-    message = TextAreaField('Message', validators=[DataRequired()])
-    submit = SubmitField('Send')

@@ -8,28 +8,36 @@ from . import login_manager
 main = Blueprint('main', __name__)
 
 @main.route("/")
-@main.route("/home")
+@main.route('/home')
 def home():
     articles = Article.query.all()
-    return render_template("home.html", articles=articles)
+    user = current_user  # или другой способ получения данных пользователя
+    return render_template("home.html", articles=articles, user=user)
+
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-@main.route("/login", methods=["GET", "POST"])
+@main.route("/login", methods = ["GET", "POST"])
 def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user and check_password_hash(user.password, form.password.data):
-            login_user(user, remember=True)
-            flash("Logged in successfully!", category='success')
-            return redirect(url_for('main.home'))
+    if request.method == "POST":
+        email= request.form.get("email")
+        password = request.form.get("password1")
+
+
+        user = User.query.filter_by(email=email).first()
+        if user:
+            if check_password_hash(user.password, password):
+                flash("Logged in!", category='success')
+                login_user(user, remember=True)
+                return redirect(url_for('main.home'))
+            else:
+                flash('Password is incorrect.', category='error')
         else:
-            flash('Login Unsuccessful. Please check email and password', category='error')
-    return render_template("login.html", form=form)
+            flash('Email does not exist.', category='error')
+    return render_template("login.html", user=current_user)
 
 @main.route("/logout")
 @login_required
@@ -38,29 +46,52 @@ def logout():
     flash('You have been logged out.', category='success')
     return redirect(url_for('main.home'))
 
-@main.route("/sign-up", methods=["GET", "POST"])
-def register():
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        hashed_password = generate_password_hash(form.password.data, method='sha256')
-        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+@main.route("/sign-up", methods = ["GET", "POST"])
+def sign_up():
+    if request.method == "POST":
+        username = request.form.get("username")
+        first_name = request.form.get('first_name')
+        last_name = request.form.get('last_name')
+        email = request.form.get("email")
+        password1 = request.form.get("password1")
+        password2 = request.form.get("passsword2")
+
+        user = User.query.filter_by(username=username).first()
+        if user:
+            flash("This username already exists.")
+            return redirect(url_for('sign_up'))
+
+        email_exists =User.query.filter_by(email=email).first()
+        if email_exists:
+            flash("This email is already registered.")
+            return redirect(url_for('sign_up'))
+
+        password = generate_password_hash(password1)
+        new_user = User(username=username, first_name=first_name, last_name=last_name, email=email, password=password)
         db.session.add(new_user)
         db.session.commit()
-        flash('Your account has been created! You are now able to log in', category='success')
-        return redirect(url_for('main.login'))
-    return render_template('sign-up.html', form=form)
-
-@main.route("/article/new", methods=['GET', 'POST'])
-@login_required
-def new_article():
-    form = ArticleForm()
-    if form.validate_on_submit():
-        article = Article(title=form.title.data, content=form.content.data, author=current_user)
-        db.session.add(article)
-        db.session.commit()
-        flash('Your article has been created!', category='success')
+        login_user(new_user, remember=True)
+        flash('User created')
         return redirect(url_for('main.home'))
-    return render_template('create-posts.html', title='New Article', form=form, legend='New Article')
+
+    return render_template('sign-up.html', user=current_user)
+
+@main.route("/create-posts", methods = ['GET', 'POST'])
+@login_required
+def create_post():
+    if request.method == 'POST':
+        text = request.form.get('text')
+
+
+        if not text:
+            flash('field can not be empty', category='error')
+        else:
+            article = Article(text=text, author=current_user.id)
+            db.session.add(article)
+            db.session.commit()
+            flash('Article created successfully', category='success')
+            return redirect(url_for('main.home'))
+    return render_template('create_posts.html', user=current_user)
 
 @main.route("/article/<int:article_id>")
 def article(article_id):
@@ -86,27 +117,20 @@ def update_article(article_id):
         form.content.data = article.content
     return render_template('edit.html', title='Update Article', form=form, legend='Update Article')
 
-@main.route("/article/<int:article_id>/delete", methods=['POST'])
+@main.route("/delete-post/<id>", methods=['GET'])
 @login_required
-def delete_article(article_id):
-    article = Article.query.get_or_404(article_id)
-    if article.author != current_user:
+def delete_post(id):
+    article = Article.query.filter_by(id=id).first()
+
+    if not article:
+        flash("Post does not exist.", category='error')
+    elif current_user.id != article.author:
         flash('You do not have permission to delete this post.', category='error')
-        return redirect(url_for('main.home'))
-    db.session.delete(article)
-    db.session.commit()
-    flash('Your article has been deleted!', category='success')
+    else:
+        db.session.delete(article)
+        db.session.commit()
+        flash('Article deleted.', category='success')
+
     return redirect(url_for('main.home'))
 
-@main.route("/about")
-def about():
-    return render_template('about.html')
-
-@main.route('/contact', methods=['GET', 'POST'])
-def contact():
-    if request.method == 'POST':
-        # Assuming there's a form and model to handle this, you'd process it here.
-        flash("Message sent. We will get back to you shortly.", category='success')
-        return redirect(url_for('main.home'))
-    return render_template('contact.html')
 
