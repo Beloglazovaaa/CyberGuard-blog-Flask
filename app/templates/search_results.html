@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Результаты поиска</h2>
+    <ul class="list-group">
+        {% for post in posts %}
+        <li class="list-group-item">
+            <h5>{{ post.title }}</h5>
+            <p>{{ post.content }}</p>
+        </li>
+        {% else %}
+        <li class="list-group-item">Ничего не найдено.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

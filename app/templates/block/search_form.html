@@ -1,10 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<style>
+    .search-container {
+        padding: 20px 0;
+        background-color: #f8f9fa; /* Светлый фон для контейнера поиска */
+        border-radius: 5px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1); /* Добавляем немного тени для эстетики */
+    }
 
-</body>
-</html>
+    .search-input {
+        border: 2px solid #007bff; /* Голубой граница, чтобы подходить под стиль Bootstrap */
+        font-size: 16px; /* Увеличиваем шрифт для лучшей читаемости */
+    }
+
+    .search-input:focus {
+        border-color: #0056b3; /* Темнее при фокусе */
+        box-shadow: 0 0 8px rgba(0,123,255,0.25); /* Свечение, чтобы выделить активное поле */
+    }
+
+    .search-button {
+        background-color: #007bff; /* Соответствующий цвет кнопки Bootstrap */
+        color: white;
+        border: none;
+        align-self: center; /* Центрирование кнопки внутри флекс-контейнера */
+    }
+
+    .search-button:hover {
+        background-color: #0056b3; /* Темнее при наведении */
+    }
+
+    .input-group {
+        display: flex;
+        align-items: center; /* Выравнивание элементов по центру */
+    }
+</style>
+
+<div class="container mt-3 search-container">
+    <form action="{{ url_for('main.search') }}" method="POST">
+        <div class="input-group">
+            <input type="text" class="form-control search-input" placeholder="Поиск постов" name="search" aria-label="Поиск постов">
+            <button class="btn btn-outline-secondary search-button" type="submit">Поиск</button>
+        </div>
+    </form>
+</div>
+

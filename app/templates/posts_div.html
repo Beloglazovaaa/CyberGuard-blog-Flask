@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title%}Home{% endblock %}
 {% block content %}
-<h2 align="center">{% block header %}Articles{% endblock %}</h2>
+<h2 align="center">{% block header %}Посты{% endblock %}</h2>
 <div id="posts">
     {% for article in articles %}
     <div class="card border-dark">
@@ -30,7 +30,7 @@
 <div align="center">
     <a href="/create-posts"
         ><button type="button" class="btn btn-dark btn-lg">
-            Create Article
+            Создать пост
         </button></a>
 </div>   
 {% endblock %}

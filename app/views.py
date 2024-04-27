@@ -133,4 +133,11 @@ def delete_post(id):
 
     return redirect(url_for('main.home'))
 
+@main.route('/search', methods=['POST'])
+def search():
+    search_word = request.form['search']
+    results = Article.query.filter(Article.text.like(f'%{search_word}%')).all()
+    return render_template('search_results.html', posts=results)
+
+
 
