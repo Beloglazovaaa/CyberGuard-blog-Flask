@@ -39,12 +39,6 @@ def login():
             flash('Email does not exist.', category='error')
     return render_template("login.html", user=current_user)
 
-@main.route('/search', methods=['POST'])
-def search():
-    search_word = request.form['search']
-    results = Article.query.filter(Article.text.like(f'%{search_word}%')).all()
-    return render_template('search_results.html', posts=results)
-
 @main.route("/logout")
 @login_required
 def logout():

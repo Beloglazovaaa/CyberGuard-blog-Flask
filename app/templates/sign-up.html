@@ -1,31 +1,31 @@
 {% extends "base.html" %}
-{% block title%}Signup{% endblock %}
+{% block title%}Регистрация{% endblock %}
 {% block content%}
 <form method="POST">
-    <h3 align="center">Sign up</h3>
+    <h3 align="center">Регистрация</h3>
     <div class="form-group">
-        <label for="first_name">First Name</label>
-        <input type="text" id="first_name" name="first_name"  class="form-control" placeholder="first_name" >
+        <label for="first_name">Имя</label>
+        <input type="text" id="first_name" name="first_name"  class="form-control" placeholder="Введите имя" >
 
-        <label for="last_name">Last name</label>
-        <input type="text" id="last_name" name="last_name" class="form-control" placeholder="last_name"  >
+        <label for="last_name">Фамилия</label>
+        <input type="text" id="last_name" name="last_name" class="form-control" placeholder="Введите фамилию"  >
 
-        <label for="email">Email Address</label>
-        <input type="text" id="email" name="email" class="form-control" placeholder="Enter Email"/>
+        <label for="email">Электронная почта</label>
+        <input type="text" id="email" name="email" class="form-control" placeholder="Введите адрес электронной почты"/>
         
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username" class="form-control" placeholder="Enter Username"/>
+        <label for="username">Имя пользователя</label>
+        <input type="text" id="username" name="username" class="form-control" placeholder="Введите имя пользователя"/>
         
         
-        <label for="password1">Password</label>
-        <input type="password" id="password1" name="password1" class="form-control" placeholder="Enter password"/>
+        <label for="password1">Пароль</label>
+        <input type="password" id="password1" name="password1" class="form-control" placeholder="Введите пароль"/>
         
-        <label for="password2">Password Again</label>
-        <input type="password2" id="password2" name="password2" class="form-control" placeholder="Enter Password Again "/>
+        <label for="password2">Повторите пароль</label>
+        <input type="password2" id="password2" name="password2" class="form-control" placeholder="Введите пароль еще раз "/>
     
     </div>
     <br/>
-    <strong>Already have an account, sign in <a href="/login">here</a></strong>
+    <strong>Если у вас уже есть аккаунт, войдите <a href="/login">здесь</a></strong>
     <div align="center"><button class="btn btn-primary" type="submit">Sign Up</button></div>
     </form>
 </form>
