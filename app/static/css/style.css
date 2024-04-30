@@ -3,6 +3,7 @@
     bottom: 0;
     width: 100%;
 }
+
 .card-container {
     display: flex;
     justify-content: center;
@@ -26,3 +27,27 @@
 .card-body {
     overflow-y: auto; /* Enables scrolling inside the card if content is too long */
 }
+
+
+.modal-header, .modal-footer {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    border-top: 1px solid #dee2e6;
+}
+
+.modal-content {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
+}
+
+.modal-label {
+    margin-bottom: .5rem;
+}
+
+.form-control {
+    margin-bottom: 1rem; /* Добавляем немного отступа между полями */
+}
+
+.btn-primary {
+    width: 100%; /* Кнопка на всю ширину */
+}
+

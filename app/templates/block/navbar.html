@@ -1,19 +1,124 @@
 <!-- navbar.html -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item"><a class="nav-link" href="/home">Главная</a></li>
                 {% if current_user.is_authenticated %}
-                <li class="nav-item"><a class="nav-link" href="/logout">Выйти</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/logout">Выйти</a></li>
                 {% else %}
-                <li class="nav-item"><a class="nav-link" href="/login">Войти</a></li>
-                <li class="nav-item"><a class="nav-link" href="/sign-up">Регистрация</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal"
+                                            data-bs-target="#loginModal">Войти</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal"
+                                            data-bs-target="#signUpModal">Регистрация</a></li>
+
                 {% endif %}
             </ul>
         </div>
     </div>
 </nav>
+
+<style>
+    .modal-header, .modal-footer {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+        border-top: 1px solid #dee2e6;
+    }
+
+    .modal-content {
+        box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
+    }
+
+    .modal-label {
+        margin-bottom: .5rem;
+    }
+
+    .form-control {
+        margin-bottom: 1rem; /* Добавляем немного отступа между полями */
+    }
+
+    .btn-primary {
+        width: 100%; /* Кнопка на всю ширину */
+    }
+
+    .modal-title {
+        margin: auto; /* Центрирование заголовка */
+    }
+
+    .close {
+        background-color: #f44336; /* Красный фон кнопки закрытия */
+        border: none;
+        border-radius: 50%; /* Круглая форма */
+        color: white; /* Белый цвет текста */
+        opacity: 1; /* Убрать стандартную полупрозрачность */
+    }
+
+    .close:hover {
+        opacity: 0.8; /* Небольшое затемнение при наведении */
+    }
+
+    .close span {
+        font-weight: bold; /* Жирное отображение крестика */
+    }
+</style>
+<!-- Вход в систему -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginModalLabel">Вход в систему</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST"> <!-- Начало формы должно быть здесь -->
+                <div class="modal-body">
+                    <label for="email" class="modal-label">Электронная почта</label>
+                    <input type="email" id="email" name="email" class="form-control" placeholder="Введите адрес электронной почты"/>
+                    <label for="password" class="modal-label">Пароль</label>
+                    <input type="password" id="password1" name="password1" class="form-control" placeholder="Введите пароль"/>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Войти</button>
+                </div>
+            </form> <!-- Конец формы -->
+        </div>
+    </div>
+</div>
+
+<!-- Регистрация -->
+<div class="modal fade" id="signUpModal" tabindex="-1" aria-labelledby="signUpModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="signUpModalLabel">Регистрация</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST"> <!-- Начало формы должно быть здесь -->
+                <div class="modal-body">
+                    <label for="first_name" class="modal-label">Имя</label>
+                    <input type="text" id="first_name" name="first_name" class="form-control" placeholder="Введите имя">
+                    <label for="last_name" class="modal-label">Фамилия</label>
+                    <input type="text" id="last_name" name="last_name" class="form-control" placeholder="Введите фамилию">
+                    <label for="email" class="modal-label">Электронная почта</label>
+                    <input type="email" id="email" name="email" class="form-control" placeholder="Введите адрес электронной почты">
+                    <label for="username" class="modal-label">Имя пользователя</label>
+                    <input type="text" id="username" name="username" class="form-control" placeholder="Введите имя пользователя">
+                    <label for="password1" class="modal-label">Пароль</label>
+                    <input type="password" id="password1" name="password1" class="form-control" placeholder="Введите пароль">
+                    <label for="password2" class="modal-label">Повторите пароль</label>
+                    <input type="password" id="password2" name="password2" class="form-control" placeholder="Введите пароль еще раз">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+                </div>
+            </form> <!-- Конец формы -->
+        </div>
+    </div>
+</div>
