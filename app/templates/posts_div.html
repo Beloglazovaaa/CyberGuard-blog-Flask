@@ -11,6 +11,7 @@
                     <a href="/posts/{{ article.user.username }}">Author: {{ article.user.username }}</a>
                 </div>
                 <div class="card-body" style="min-height: 150px;">
+                    <h5 class="card-title">{{ article.title }}</h5> <!-- Displaying the title -->
                     <div class="card-text">{{ article.text }}</div>
                 </div>
                 <div class="card-footer text-muted">{{ article.date_created }}</div>
@@ -28,3 +29,4 @@
 </div>
 {% endblock %}
 {% endblock %}
+

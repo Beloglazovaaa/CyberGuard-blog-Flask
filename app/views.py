@@ -82,27 +82,29 @@ def sign_up():
 
     return render_template('sign-up.html', user=current_user)
 
-@main.route("/create-posts", methods = ['GET', 'POST'])
+@main.route("/create-posts", methods=['GET', 'POST'])
 @login_required
 def create_post():
     if request.method == 'POST':
+        title = request.form.get('title')
         text = request.form.get('text')
 
-
-        if not text:
-            flash('field can not be empty', category='error')
+        if not title or not text:
+            flash('Title and text fields cannot be empty', category='error')
         else:
-            article = Article(text=text, author=current_user.id)
+            article = Article(title=title, text=text, author=current_user.id)
             db.session.add(article)
             db.session.commit()
             flash('Article created successfully', category='success')
             return redirect(url_for('main.home'))
     return render_template('create_posts.html', user=current_user)
 
+
 @main.route("/article/<int:article_id>")
 def article(article_id):
     article = Article.query.get_or_404(article_id)
     return render_template('posts.html', title=article.title, article=article)
+
 
 
 

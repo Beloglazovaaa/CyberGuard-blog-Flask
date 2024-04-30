@@ -1,18 +1,24 @@
-{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
-    %}
-    <h3 align="center">Создать пост</h3>
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<h3 align="center">Создать пост</h3>
 
-    <form method="POST">
-      <textarea name="text" id="text" class="form-control"></textarea>
-      <br />
-      <div align="center">
-        <button type="submit" class="btn btn-lg btn-primary">Post</button>
-      </div>
-    </form>
+<form method="POST">
+    <div class="form-group">
+        <label for="title">Title:</label>
+        <input type="text" name="title" id="title" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="text">Text:</label>
+        <textarea name="text" id="text" class="form-control" required></textarea>
+    </div>
     <br />
     <div align="center">
-      <a href="/home"
-        ><button type="button" class="btn btn-lg btn-primary">Back</button></a
-      >
+        <button type="submit" class="btn btn-lg btn-primary">Post</button>
     </div>
-    {% endblock %}
+</form>
+<br />
+<div align="center">
+    <a href="/home"><button type="button" class="btn btn-lg btn-primary">Back</button></a>
+</div>
+{% endblock %}
