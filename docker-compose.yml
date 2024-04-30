@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  db:
+    container_name: db_flask
+    image: mysql:latest
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: DB
+
+  web:
+    container_name: blog_flask
+    image: blog:latest
+    build: .
+    command: python -m flask run --port=8000
+    volumes:
+      - flask_blog:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - MYSQL_HOST=db
+    depends_on:
+      - db
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin_flask
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=db
+    restart: always
+    ports:
+      - 8081:80
+
+volumes:
+  flask_blog:
