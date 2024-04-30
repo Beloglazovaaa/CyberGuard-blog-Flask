@@ -3,3 +3,26 @@
     bottom: 0;
     width: 100%;
 }
+.card-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.card-fixed {
+    width: 300px; /* Set fixed width */
+    height: 400px; /* Set fixed height */
+    margin: 10px; /* Space between cards */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Distributes space inside the card */
+}
+
+.card-header, .card-footer {
+    color: #333;
+    background-color: #f8f9fa;
+}
+
+.card-body {
+    overflow-y: auto; /* Enables scrolling inside the card if content is too long */
+}

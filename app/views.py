@@ -39,6 +39,12 @@ def login():
             flash('Email does not exist.', category='error')
     return render_template("login.html", user=current_user)
 
+@main.route('/search', methods=['POST'])
+def search():
+    search_word = request.form['search']
+    results = Article.query.filter(Article.text.like(f'%{search_word}%')).all()
+    return render_template('search_results.html', posts=results)
+
 @main.route("/logout")
 @login_required
 def logout():
@@ -98,46 +104,6 @@ def article(article_id):
     article = Article.query.get_or_404(article_id)
     return render_template('posts.html', title=article.title, article=article)
 
-@main.route("/article/<int:article_id>/update", methods=['GET', 'POST'])
-@login_required
-def update_article(article_id):
-    article = Article.query.get_or_404(article_id)
-    if article.author != current_user:
-        flash('You do not have permission to edit this post.', category='error')
-        return redirect(url_for('main.home'))
-    form = ArticleForm()
-    if form.validate_on_submit():
-        article.title = form.title.data
-        article.content = form.content.data
-        db.session.commit()
-        flash('Your article has been updated!', category='success')
-        return redirect(url_for('main.article', article_id=article.id))
-    elif request.method == 'GET':
-        form.title.data = article.title
-        form.content.data = article.content
-    return render_template('edit.html', title='Update Article', form=form, legend='Update Article')
-
-@main.route("/delete-post/<id>", methods=['GET'])
-@login_required
-def delete_post(id):
-    article = Article.query.filter_by(id=id).first()
-
-    if not article:
-        flash("Post does not exist.", category='error')
-    elif current_user.id != article.author:
-        flash('You do not have permission to delete this post.', category='error')
-    else:
-        db.session.delete(article)
-        db.session.commit()
-        flash('Article deleted.', category='success')
-
-    return redirect(url_for('main.home'))
-
-@main.route('/search', methods=['POST'])
-def search():
-    search_word = request.form['search']
-    results = Article.query.filter(Article.text.like(f'%{search_word}%')).all()
-    return render_template('search_results.html', posts=results)
 
 
 
