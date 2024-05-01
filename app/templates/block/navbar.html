@@ -75,7 +75,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="POST"> <!-- Начало формы должно быть здесь -->
+            <form method="POST" action="/login"> <!-- Добавлен action -->
                 <div class="modal-body">
                     <label for="email" class="modal-label">Электронная почта</label>
                     <input type="email" id="email" name="email" class="form-control" placeholder="Введите адрес электронной почты"/>
@@ -85,7 +85,7 @@
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Войти</button>
                 </div>
-            </form> <!-- Конец формы -->
+            </form>
         </div>
     </div>
 </div>
@@ -100,7 +100,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="POST"> <!-- Начало формы должно быть здесь -->
+            <form method="POST" action="/sign-up"> <!-- Добавлен action -->
                 <div class="modal-body">
                     <label for="first_name" class="modal-label">Имя</label>
                     <input type="text" id="first_name" name="first_name" class="form-control" placeholder="Введите имя">
@@ -118,7 +118,7 @@
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
                 </div>
-            </form> <!-- Конец формы -->
+            </form>
         </div>
     </div>
 </div>
