@@ -9,6 +9,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: DB
+    volumes:
+      - ./flask_db:/var/lib/mysql/
 
   web:
     container_name: blog_flask
@@ -35,3 +37,4 @@ services:
 
 volumes:
   flask_blog:
+  flask_db:
