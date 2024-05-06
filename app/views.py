@@ -14,7 +14,7 @@ main = Blueprint('main', __name__)
 
 def home():
     page = request.args.get('page', 1, type=int)
-    pagination = Article.query.paginate(page=page, per_page=6, error_out=False)
+    pagination = Article.query.paginate(page=page, per_page=3, error_out=False)
     articles = pagination.items
     return render_template("home.html", articles=articles, user=current_user, pagination=pagination)
 

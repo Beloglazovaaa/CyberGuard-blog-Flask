@@ -11,91 +11,79 @@
 }
 
 .card-fixed {
-    width: 300px; /* Set fixed width */
-    height: 400px; /* Set fixed height */
-    margin: 10px; /* Space between cards */
+    width: 300px;
+    height: 400px;
+    margin: 10px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Distributes space inside the card */
+    justify-content: space-between;
 }
 
-.card-header, .card-footer {
-    color: #333;
-    background-color: #f8f9fa;
-}
-
-.card-body {
-    overflow-y: auto; /* Enables scrolling inside the card if content is too long */
-}
-
-
-.modal-header, .modal-footer {
+.card-header,
+.card-footer,
+.modal-header,
+.modal-footer {
     background-color: #f8f9fa;
     border-bottom: 1px solid #dee2e6;
     border-top: 1px solid #dee2e6;
 }
 
 .modal-content {
-    box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
 }
 
 .modal-label {
-    margin-bottom: .5rem;
+    margin-bottom: 0.5rem;
 }
 
 .form-control {
-    margin-bottom: 1rem; /* Добавляем немного отступа между полями */
+    margin-bottom: 1rem;
 }
 
 .btn-primary {
-    width: 100%; /* Кнопка на всю ширину */
+    width: 100%;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 0;
+    text-align: center;
+    text-decoration: none;
+    display: block;
 }
 
-
 .card {
-    border: 1px solid #ccc; /* Граница вокруг карточки */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Тень для карточки */
-    padding: 20px; /* Внутренние отступы карточки */
-    margin: 10px; /* Внешние отступы между карточками */
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin: 10px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Распределение пространства между элементами */
-    height: 300px; /* Фиксированная высота карточки */
+    justify-content: space-between;
+    height: 300px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .card-title {
-    font-size: 18px; /* Размер шрифта заголовка */
-    font-weight: bold; /* Жирное начертание */
+    font-size: 18px;
+    font-weight: bold;
 }
 
 .card-text {
-    overflow: hidden; /* Скрывает текст, выходящий за пределы элемента */
-    text-overflow: ellipsis; /* Текст заканчивается многоточием */
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .card-footer {
-    font-size: 14px; /* Размер шрифта даты */
-    color: #666; /* Цвет даты */
-    margin-top: auto; /* Отталкивает дату и кнопку вниз карточки */
+    font-size: 14px;
+    color: #666;
+    margin-top: auto;
 }
 
 .button-more {
-    width: 100%; /* Кнопка на всю ширину карточки */
-    background-color: #007bff; /* Синий цвет кнопки */
-    color: white; /* Белый текст кнопки */
-    border: none; /* Без рамки */
-    padding: 10px 0; /* Вертикальные отступы внутри кнопки */
-    text-align: center; /* Текст по центру кнопки */
-    text-decoration: none; /* Без подчёркивания текста */
-    display: block; /* Блочное отображение */
-}
-
-.card {
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);  /* Добавляет тень вокруг карточки */
+    width: 100%;
 }
 
 .card-body {
-    position: relative;  /* Для правильного позиционирования кнопки и ссылки */
+    overflow-y: auto;
 }
 
 .card-title a {
@@ -106,10 +94,3 @@
 .card-title a:hover {
     text-decoration: underline;
 }
-
-.btn-primary {
-    position: absolute;  /* Размещаем кнопку внизу карточки */
-    bottom: 20px;        /* Отступ от нижней части карточки */
-    left: 20px;          /* Отступ от левой части карточки */
-}
-
