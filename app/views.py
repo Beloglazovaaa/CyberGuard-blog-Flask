@@ -18,6 +18,10 @@ def home():
     articles = pagination.items
     return render_template("home.html", articles=articles, user=current_user, pagination=pagination)
 
+@main.route('/post/<int:post_id>')
+def post_detail(post_id):
+    post = Article.query.get_or_404(post_id)  # Получаем объект Article по его идентификатору
+    return render_template('post_detail.html', post=post)
 
 
 @login_manager.user_loader

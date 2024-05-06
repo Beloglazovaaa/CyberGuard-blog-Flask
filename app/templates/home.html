@@ -6,10 +6,13 @@
             <li class="list-group-item">
                 <h5>{{ article.title }}</h5>
                 <p>{{ article.text }}</p>
-                <small>Posted by {{ article.author }} on {{ article.date_created }}</small>
+                <small>Posted by {{ current_user.username if current_user.is_authenticated else 'Anonymous' }}
+                    on {{ article.date_created.strftime('%d.%m.%Y') }}</small>;
+                <a href="{{ url_for('main.post_detail', post_id=article.id) }}" class="btn btn-primary">Подробнее</a>
             </li>
         {% endfor %}
     </ul>
+
     <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
             {% if pagination.has_prev %}
