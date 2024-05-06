@@ -1,32 +1,38 @@
 {% extends "base.html" %}
 {% block title %}Home{% endblock %}
+
 {% block content %}
-<h2 align="center">{% block header %}Посты{% endblock %}</h2>
-<div class="container mt-4">
+    <h1 align="center">{% block header %}Последние записи блога{% endblock %}</h1>
+    <div class="container mt-4">
     <div class="row">
         {% for article in articles %}
-        <div class="col-md-4 mb-4">
-            <div class="card border-dark h-100">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <a href="/posts/{{ article.user.username }}">Author: {{ article.user.username }}</a>
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card border-dark h-100">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="card-title"><a href="/posts/{{ article.id }}"
+                                                      class="stretched-link">{{ article.title }}</a></h5>
+                            <p class="card-text">{{ article.text | truncate(150) }}</p>
+                            <a href="/posts/{{ article.id }}" class="btn btn-primary">Подробнее</a>
+                        </div>
+                        <div class="card-footer text-muted">{{ article.date_created.strftime('%d.%m.%Y') }}</div>
+                    </div>
                 </div>
-                <div class="card-body" style="min-height: 150px;">
-                    <h5 class="card-title">{{ article.title }}</h5> <!-- Displaying the title -->
-                    <div class="card-text">{{ article.text }}</div>
-                </div>
-                <div class="card-footer text-muted">{{ article.date_created }}</div>
-            </div>
-        </div>
-        {% if loop.index % 3 == 0 %}
-        </div><div class="row">
-        {% endif %}
+                {% if loop.index % 3 == 0 %}
+                    </div><div class="row">
+                {% endif %}
         {% endfor %}
+        </div>
     </div>
-</div>
+{% endblock %}
+
 {% block footer %}
-<div align="center">
-    <a href="/create-posts"><button type="button" class="btn btn-dark btn-lg">Создать пост</button></a>
-</div>
+    <div align="center">
+        <a href="/create_posts">
+            <button type="button" class="btn btn-dark btn-lg">Создать пост</button>
+        </a>
+    </div>
 {% endblock %}
-{% endblock %}
+
+
 

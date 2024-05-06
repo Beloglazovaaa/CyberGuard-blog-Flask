@@ -1,1 +1,36 @@
-{% extends "posts_div.html" %} {% block title %}Home{% endblock %} 
+{% extends "posts_div.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+    <ul class="list-group mb-3">
+        {% for article in articles %}
+            <li class="list-group-item">
+                <h5>{{ article.title }}</h5>
+                <p>{{ article.text }}</p>
+                <small>Posted by {{ article.author }} on {{ article.date_created }}</small>
+            </li>
+        {% endfor %}
+    </ul>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            {% if pagination.has_prev %}
+                <li class="page-item"><a class="page-link" href="{{ url_for('main.home', page=pagination.prev_num) }}">Предыдущая</a>
+                </li>
+            {% endif %}
+            {% for page_num in pagination.iter_pages() %}
+                <li class="page-item {{ 'active' if page_num == pagination.page else '' }}">
+                    <a class="page-link" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
+                </li>
+            {% endfor %}
+            {% if pagination.has_next %}
+                <li class="page-item"><a class="page-link" href="{{ url_for('main.home', page=pagination.next_num) }}">Следующая</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <div align="center">
+        <a href="/create-posts">
+            <button type="button" class="btn btn-primary btn-lg">Создать пост</button>
+        </a>
+    </div>
+{% endblock %}

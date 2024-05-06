@@ -4,15 +4,20 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from .models import User, Article, db
 from .forms import LoginForm, RegistrationForm, ArticleForm
 from . import login_manager
+from flask_login import current_user
+
 
 main = Blueprint('main', __name__)
 
 @main.route("/")
 @main.route('/home')
+
 def home():
-    articles = Article.query.all()
-    user = current_user  # или другой способ получения данных пользователя
-    return render_template("home.html", articles=articles, user=user)
+    page = request.args.get('page', 1, type=int)
+    pagination = Article.query.paginate(page=page, per_page=6, error_out=False)
+    articles = pagination.items
+    return render_template("home.html", articles=articles, user=current_user, pagination=pagination)
+
 
 
 @login_manager.user_loader
@@ -98,8 +103,6 @@ def create_post():
 def article(article_id):
     article = Article.query.get_or_404(article_id)
     return render_template('posts.html', title=article.title, article=article)
-
-
 
 
 
