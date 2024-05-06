@@ -14,7 +14,6 @@ services:
     container_name: blog_flask
     image: blog:latest
     build: .
-    command: python -m flask run --port=8000
     volumes:
       - flask_blog:/app
     ports:
