@@ -1,8 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* чтобы футер всегда был внизу страницы */
+        }
 
-<footer class="footer p-3 bg-light">
-    <div class="container">
-        <span class="text-muted"></span>
+        .content {
+            flex: 1;
+            /* Добавляем прокрутку, если контент не помещается на страницу */
+            overflow-y: auto;
+        }
+
+        .footer {
+            width: 100%;
+            background-color: #f8f9fa;
+            padding: 10px;
+            text-align: center;
+        }
+
+        /* Стили для блока переводчика Google */
+        #google_translate_element {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
     </div>
+
+    <footer class="footer">
+        <div class="container">
+            <span class="text-muted"></span>
+        </div>
+    </footer>
 
     <!-- Блок переводчика Google -->
     <div id="google_translate_element"></div>
@@ -11,6 +52,7 @@
             new google.translate.TranslateElement({pageLanguage: 'ru'}, 'google_translate_element');
         }
     </script>
-    <script type="text/javascript"
-            src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-</footer>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>
+

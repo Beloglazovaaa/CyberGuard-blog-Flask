@@ -19,9 +19,9 @@
               Разделы блога
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdownBlog">
-              <li><a class="dropdown-item" href="polynomial_regression">Полиномиальная регрессия</a></li>
-              <li><a class="dropdown-item" href="gradient_boosting">Градиентный бустинг</a></li>
-              <li><a class="dropdown-item" href="recurrent_neural_network">Рекуррентная нейронная сеть</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('main.polynomial_regression') }}">Полиномиальная регрессия</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('main.gradient_boosting') }}">Градиентный бустинг</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('main.recurrent_neural_network') }}">Рекуррентная нейронная сеть</a></li>
             </ul>
           </li>
         </ul>
