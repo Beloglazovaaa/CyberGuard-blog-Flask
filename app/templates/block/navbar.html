@@ -1,26 +1,64 @@
 <!-- navbar.html -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<section class="my-navigation">
+  <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
     <div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link" href="/home">Главная</a></li>
-                {% if current_user.is_authenticated %}
-                    <li class="nav-item"><a class="nav-link" href="/logout">Выйти</a></li>
-                {% else %}
-                    <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal"
-                                            data-bs-target="#loginModal">Войти</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal"
-                                            data-bs-target="#signUpModal">Регистрация</a></li>
-
-                {% endif %}
+        <a href="/" class="navbar-brand">
+            <img src="{{ url_for('static', filename='img/GeekGenius-logo.png') }}" class="d-inline-block align-top" alt="GeekGenius-logo"
+                 width="30" height="30">
+        </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/">Главная</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownBlog" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Разделы блога
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownBlog">
+              <li><a class="dropdown-item" href="polynomial_regression">Полиномиальная регрессия</a></li>
+              <li><a class="dropdown-item" href="gradient_boosting">Градиентный бустинг</a></li>
+              <li><a class="dropdown-item" href="recurrent_neural_network">Рекуррентная нейронная сеть</a></li>
             </ul>
-        </div>
+          </li>
+        </ul>
+        {% if current_user.is_authenticated %}
+          <div class="navbar-text ms-3">
+            <a href="/logout" class="btn btn-outline-light ms-2">Выход</a>
+          </div>
+        {% else %}
+          <button type="button" class="btn btn-outline-light ms-2" data-bs-toggle="modal" data-bs-target="#loginModal">Войти</button>
+          <button type="button" class="btn btn-outline-light ms-2" data-bs-toggle="modal" data-bs-target="#signUpModal">Регистрация</button>
+        {% endif %}
+      </div>
     </div>
-</nav>
+  </nav>
+</section>
+{#<nav class="navbar navbar-expand-lg navbar-light bg-light">#}
+{#    <div class="container-fluid">#}
+{#        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"#}
+{#                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">#}
+{#            <span class="navbar-toggler-icon"></span>#}
+{#        </button>#}
+{#        <div class="collapse navbar-collapse justify-content-center" id="navbarNav">#}
+{#            <ul class="navbar-nav">#}
+{#                <li class="nav-item"><a class="nav-link" href="/home">Главная</a></li>#}
+{#                {% if current_user.is_authenticated %}#}
+{#                    <li class="nav-item"><a class="nav-link" href="/logout">Выйти</a></li>#}
+{#                {% else %}#}
+{#                    <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal"#}
+{#                                            data-bs-target="#loginModal">Войти</a></li>#}
+{#                    <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal"#}
+{#                                            data-bs-target="#signUpModal">Регистрация</a></li>#}
+{##}
+{#                {% endif %}#}
+{#            </ul>#}
+{#        </div>#}
+{#    </div>#}
+{#</nav>#}
 
 <style>
     .modal-header, .modal-footer {
