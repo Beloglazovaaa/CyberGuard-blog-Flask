@@ -8,12 +8,6 @@
                 {% for article in articles %}
                     <div class="col-md-4">
                         <div class="card mb-4 shadow-sm">
-                            {#                        <h5>{{ article.title }}</h5>#}
-                            {#                        <p>{{ article.text }}</p>#}
-                            {#                        <small>Posted by {{ current_user.username if current_user.is_authenticated else 'Anonymous' }}#}
-                            {#                            on {{ article.date_created.strftime('%d.%m.%Y') }}</small>;#}
-                            {#                        <a href="{{ url_for('main.post_detail', post_id=article.id) }}"#}
-                            {#                           class="btn btn-primary">Подробнее</a>#}
                             <div class="card-body" style="height: 200px; overflow: hidden;">
                                 <h4 class="card-title"
                                     style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ article.title }}</h4>
