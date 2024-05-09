@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+
+{% block title %}Полиномиальная регрессия{% endblock %}
+
+{% block content %}
+    <style>
+        .content-container {
+            margin: 20px auto; /* Отступы со всех сторон и автоматическое выравнивание по центру */
+            line-height: 2; /* Здесь 1.5 - это множитель текущего размера шрифта */
+            max-width: 1000px; /* Максимальная ширина контейнера */
+        }
+
+        .img-container {
+            margin-bottom: 20px; /* Дополнительный отступ снизу */
+            text-align: center; /* Выравнивание по центру */
+        }
+
+        .img-container img {
+            max-width: 100%; /* Максимальная ширина изображения */
+            height: auto; /* Автоматическая высота */
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .code-cell {
+            margin-left: 0; /* Убираем отступ слева */
+            margin-right: auto; /* Выравнивание по правому краю */
+            width: auto; /* Ширина ячейки кода */
+            border: 1px solid #ccc;
+            border-radius: 2px;
+            padding: 1px;
+            background-color: #f7f7f7;
+            font-family: monospace;
+            line-height: 1.5;
+            overflow-x: auto;
+            text-align: left;
+        }
+
+        /* Выравниваем текст по левому краю */
+    </style>
+
+    <div class="content-container">
+        <h2>Полиномиальная регрессия</h2>
+
+        <p>
+            Полиномиальная регрессия - это метод регрессии, который использует многочлены для аппроксимации зависимости
+            между независимой переменной и зависимой переменной. Он является расширением линейной регрессии, позволяя
+            моделировать более сложные взаимосвязи между переменными. Вместо линейной зависимости, полиномиальная
+            регрессия может улавливать криволинейные и нелинейные взаимосвязи между переменными, что делает ее мощным
+            инструментом анализа данных.
+        </p>
+
+        <div class="img-container">
+            <img class="img-fluid rounded" src="/media/pol_media/pol_reg_gif.webp" alt="" width="600" height="400">
+        </div>
+
+        <p>
+        <div class="img-container">
+        <pre class="code-cell">
+          <code>
+    import warnings
+    from .models import DiabetesModel
+
+    import pandas as pd
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.preprocessing import StandardScaler
+
+    # Загрузка данных
+    data = pd.read_csv('myblog/diabetes.csv')
+
+    # Разделение данных на признаки (X) и целевую переменную (y)
+    X = data.drop('Outcome', axis=1)
+    y = data['Outcome']
+
+    # Масштабирование признаков
+    scaler = StandardScaler()
+    scaler.fit(X)
+    X_scaled = scaler.transform(X)
+
+    # Создание и обучение модели логистической регрессии
+    model = LogisticRegression()
+    model.fit(X_scaled, y)
+
+
+    def predict_diabetes():
+    print("Введите значения для всех признаков:")
+    pregnancies = float(input("Количество беременностей: "))
+    glucose = float(input("Уровень глюкозы: "))
+    blood_pressure = float(input("Артериальное давление: "))
+    skin_thickness = float(input("Толщина кожной складки: "))
+    insulin = float(input("Инсулин: "))
+    bmi = float(input("ИМТ: "))
+    diabetes_pedigree_function = float(input("Генетический фактор: "))
+    age = float(input("Возраст: "))
+
+    # Масштабирование введенных пользователем данных
+    user_data = scaler.transform(
+        [[pregnancies, glucose, blood_pressure, skin_thickness, insulin, bmi, diabetes_pedigree_function, age]])
+
+    # Предсказание вероятности возникновения диабета
+    probability = model.predict_proba(user_data)[:, 1][0]
+    DiabetesModel.objects.create(pregnancies=pregnancies, glucose=glucose, blood_pressure=blood_pressure,
+                                 skin_thickness=skin_thickness, insulin=insulin, bmi=bmi,
+                                 diabetes_pedigree_function=diabetes_pedigree_function, age=age,
+                                 probability=probability)
+    return probability
+
+
+    # Пример использования функции для предсказания вероятности диабета у пациента
+    predicted_probability = predict_diabetes()
+    print("Predicted Probability of Diabetes:", predicted_probability)
+
+          </code>
+        </pre>
+        </div>
+        </p>
+
+        <p>
+            Этот код выполняет следующие действия. Он загружает данные из файла diabetes.csv и разделяет их на матрицу
+            признаков и вектор целевой переменной. Затем он создает и обучает модель полиномиальной регрессии для
+            предсказания вероятности возникновения диабета на основе введенных пользователем данных. После предсказания
+            вероятности диабета для введенных данных, он вставляет эти данные в базу данных MySQL.
+        </p>
+
+        <div class="diabetes-prediction">
+            <h1>Прогнозирование риска развития диабета</h1>
+            <button class="btn btn-primary" onclick="togglePredictionForm()">Обучить модель</button>
+                <div class="form-group">
+                    <label for="pregnancies" class="form-label">Количество беременностей:</label>
+                    <input class="form-control" type="number" id="pregnancies" name="pregnancies" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="glucose" class="form-label">Уровень глюкозы:</label>
+                    <input class="form-control" type="number" id="glucose" name="glucose" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="blood-pressure" class="form-label">Артериальное давление:</label>
+                    <input class="form-control" type="number" id="blood-pressure" name="blood-pressure" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="skin-thickness" class="form-label">Толщина кожной складки:</label>
+                    <input class="form-control" type="number" id="skin-thickness" name="skin-thickness" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="insulin" class="form-label">Инсулин:</label>
+                    <input class="form-control" type="number" id="insulin" name="insulin" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="bmi" class="form-label">ИМТ:</label>
+                    <input class="form-control" type="number" id="bmi" name="bmi" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="diabetes-pedigree" class="form-label">Генетический фактор:</label>
+                    <input class="form-control" type="number" id="diabetes-pedigree" name="diabetes-pedigree" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="age" class="form-label">Возраст:</label>
+                    <input class="form-control" type="number" id="age" name="age" value="0">
+                </div>
+                <button class="btn btn-success" id="predict-button">Сделать прогноз</button>
+                <p id="prediction-result"></p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function togglePredictionForm() {
+            var predictionForm = document.getElementById('prediction-form');
+            if (predictionForm.classList.contains('hidden')) {
+                predictionForm.classList.remove('hidden');
+            } else {
+                predictionForm.classList.add('hidden');
+            }
+        }
+
+        document.getElementById('prediction-form').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+
+            // Get form data
+            const formData = new FormData(this);
+
+            // Send POST request using Fetch API
+            fetch('/predict_diabetes_polynomial/', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}' // Include CSRF token in headers
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json(); // Parse response body as JSON
+                })
+                .then(data => {
+                    const elem = document.getElementById('prediction-result');
+                    console.log(data)
+                    elem.textContent = data.probability
+                    const button = document.getElementById('predict-button');
+                    button.disabled = true
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                    // Handle errors
+                });
+        });
+    </script>
+{% endblock %}

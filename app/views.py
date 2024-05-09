@@ -110,5 +110,16 @@ def article(article_id):
 
 
 
+@main.route('/polynomial_regression')
+def polynomial_regression():
+    return render_template('polynomial_regression.html')
+
+@main.route('/gradient_boosting')
+def gradient_boosting():
+    return render_template('gradient_boosting.html')
+
+@main.route('/recurrent_neural_network')
+def recurrent_neural_network():
+    return render_template('recurrent_neural_network.html')
 
 

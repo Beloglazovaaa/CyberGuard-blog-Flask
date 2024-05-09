@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+
+{% block title %}Рекуррентная нейронная сеть{% endblock %}
+
+{% block content %}
+    <style>
+        .content-container {
+            margin: 20px auto; /* Отступы со всех сторон и автоматическое выравнивание по центру */
+            line-height: 2; /* Здесь 1.5 - это множитель текущего размера шрифта */
+            max-width: 1000px; /* Максимальная ширина контейнера */
+        }
+
+        .img-container {
+            margin-bottom: 20px; /* Дополнительный отступ снизу */
+            text-align: center; /* Выравнивание по центру */
+        }
+
+        .img-container img {
+            max-width: 100%; /* Максимальная ширина изображения */
+            height: auto; /* Автоматическая высота */
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .code-cell {
+            margin-left: 0; /* Убираем отступ слева */
+            margin-right: auto; /* Выравнивание по правому краю */
+            width: auto; /* Ширина ячейки кода */
+            border: 1px solid #ccc;
+            border-radius: 2px;
+            padding: 1px;
+            background-color: #f7f7f7;
+            font-family: monospace;
+            line-height: 1.5;
+            overflow-x: auto;
+            text-align: left; }
+
+        /* Выравниваем текст по левому краю */
+    </style>
+
+    <div class="content-container">
+        <h2>Рекуррентная нейронная сеть</h2>
+
+        <p>
+            Рекуррентная нейронная сеть (RNN) — это класс нейронных сетей, который специализируется на обработке
+            последовательных данных. Основная их особенность состоит в том, что они имеют обратные связи, что позволяет
+            им учитывать контекст и историю входных данных.
+
+            В отличие от стандартных нейронных сетей, где данные рассматриваются как независимые друг от друга, в RNN
+            данные рассматриваются как последовательность, где каждый элемент связан с предыдущими элементами.
+
+            Классическая архитектура RNN состоит из повторяющегося слоя нейронов, который используется несколько раз для
+            обработки каждого элемента последовательности входных данных. Этот слой сохраняет внутреннее состояние
+            (hidden state), которое представляет собой информацию о предыдущих элементах последовательности и передается
+            на следующий шаг обработки. Это позволяет RNN учитывать контекст и динамику данных. </p>
+
+        <div class="img-container">
+            <img class="img-fluid rounded" src="/media/neural_media/1_neu_gif.webp" alt="" width="600" height="400">
+        </div>
+
+        <p>
+        <div class="img-container">
+        <pre class="code-cell">
+          <code>
+    import warnings
+    from .models import DiabetesModel
+
+    import pandas as pd
+    import numpy as np
+    from sklearn.preprocessing import StandardScaler
+    from tensorflow.keras.models import Sequential
+    from tensorflow.keras.layers import Dense, SimpleRNN
+
+    # Загрузка данных
+    data = pd.read_csv('myblog/diabetes.csv')
+
+    # Разделение данных на признаки (X) и целевую переменную (y)
+    X = data.drop('Outcome', axis=1).values
+    y = data['Outcome'].values
+
+    # Масштабирование признаков
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+
+    # Преобразование данных в последовательности
+    sequence_length = 8  # Длина последовательности
+    X_sequences = []
+    for i in range(len(X_scaled) - sequence_length + 1):
+        X_sequences.append(X_scaled[i:i + sequence_length])
+
+    X_sequences = np.array(X_sequences)
+
+    # Создание и обучение модели RNN
+    model = Sequential([
+        SimpleRNN(units=32, input_shape=(sequence_length, X.shape[1])),
+        Dense(1, activation='sigmoid')
+    ])
+
+    model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+    model.fit(X_sequences, y, epochs=10, batch_size=32)
+
+    def predict_diabetes():
+        print("Введите значения для всех признаков:")
+        pregnancies = float(input("Количество беременностей: "))
+        glucose = float(input("Уровень глюкозы: "))
+        blood_pressure = float(input("Артериальное давление: "))
+        skin_thickness = float(input("Толщина кожной складки: "))
+        insulin = float(input("Инсулин: "))
+        bmi = float(input("ИМТ: "))
+        diabetes_pedigree_function = float(input("Генетический фактор: "))
+        age = float(input("Возраст: "))
+
+        user_data = np.array([[pregnancies, glucose, blood_pressure, skin_thickness, insulin, bmi,
+                               diabetes_pedigree_function, age]])
+        user_data_scaled = scaler.transform(user_data)
+        user_data_sequence = np.expand_dims(user_data_scaled, axis=0)
+
+        # Предсказание вероятности возникновения диабета
+        probability = model.predict(user_data_sequence)[0][0]
+        DiabetesModel.objects.create(pregnancies=pregnancies, glucose=glucose, blood_pressure=blood_pressure,
+                                     skin_thickness=skin_thickness, insulin=insulin, bmi=bmi,
+                                     diabetes_pedigree_function=diabetes_pedigree_function, age=age,
+                                     probability=probability)
+        return probability
+
+    # Пример использования функции для предсказания вероятности диабета у пациента
+    predicted_probability = predict_diabetes()
+    print("Predicted Probability of Diabetes:", predicted_probability)
+
+          </code>
+        </pre>
+        </div>
+        </p>
+
+        <p>
+            В этом коде осуществляется анализ данных о диабете с использованием рекуррентной нейронной сети (RNN).
+            Вначале данные загружаются из CSV-файла и масштабируются для обеспечения одинакового диапазона значений.
+            Затем данные преобразуются в последовательности, которые затем подаются на вход RNN. Модель RNN обучается
+            предсказывать вероятность диабета на основе введенных параметров, таких как количество беременностей,
+            уровень глюкозы и другие. После обучения модели пользователю предлагается ввести свои данные, и на основе
+            этого модель делает прогноз вероятности развития диабета. Полученное значение вероятности выводится на
+            экран.
+        </p>
+
+        <div class="diabetes-prediction">
+            <h1>Прогнозирование риска развития диабета</h1>
+            <button class="btn btn-primary" onclick="togglePredictionForm()">Обучить модель</button>
+                <div class="form-group">
+                    <label for="pregnancies" class="form-label">Количество беременностей:</label>
+                    <input class="form-control" type="number" id="pregnancies" name="pregnancies" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="glucose" class="form-label">Уровень глюкозы:</label>
+                    <input class="form-control" type="number" id="glucose" name="glucose" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="blood-pressure" class="form-label">Артериальное давление:</label>
+                    <input class="form-control" type="number" id="blood-pressure" name="blood-pressure" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="skin-thickness" class="form-label">Толщина кожной складки:</label>
+                    <input class="form-control" type="number" id="skin-thickness" name="skin-thickness" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="insulin" class="form-label">Инсулин:</label>
+                    <input class="form-control" type="number" id="insulin" name="insulin" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="bmi" class="form-label">ИМТ:</label>
+                    <input class="form-control" type="number" id="bmi" name="bmi" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="diabetes-pedigree" class="form-label">Генетический фактор:</label>
+                    <input class="form-control" type="number" id="diabetes-pedigree" name="diabetes-pedigree" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="age" class="form-label">Возраст:</label>
+                    <input class="form-control" type="number" id="age" name="age" value="0">
+                </div>
+                <button class="btn btn-success" id="predict-button">Сделать прогноз</button>
+                <p id="prediction-result"></p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function togglePredictionForm() {
+            var predictionForm = document.getElementById('prediction-form');
+            if (predictionForm.classList.contains('hidden')) {
+                predictionForm.classList.remove('hidden');
+            } else {
+                predictionForm.classList.add('hidden');
+            }
+        }
+
+        document.getElementById('prediction-form').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+
+            // Get form data
+            const formData = new FormData(this);
+
+            // Send POST request using Fetch API
+            fetch('/predict_diabetes_recurrent/', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}' // Include CSRF token in headers
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json(); // Parse response body as JSON
+                })
+                .then(data => {
+                    const elem = document.getElementById('prediction-result');
+                    elem.textContent = data.probability
+                    const button = document.getElementById('predict-button');
+                    button.disabled = true
+                })
+
+        });
+    </script>
+
+{% endblock %}
