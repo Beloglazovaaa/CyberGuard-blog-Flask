@@ -55,7 +55,7 @@ def logout():
     flash('You have been logged out.', category='success')
     return redirect(url_for('main.home'))
 
-@main.route("/sign-up", methods = ["GET", "POST"])
+@main.route("/sign-up", methods=["GET", "POST"])
 def sign_up():
     if request.method == "POST":
         username = request.form.get("username")
@@ -63,27 +63,38 @@ def sign_up():
         last_name = request.form.get('last_name')
         email = request.form.get("email")
         password1 = request.form.get("password1")
-        password2 = request.form.get("passsword2")
+        password2 = request.form.get("password2")
+
+        # Проверка на пустые поля
+        if not (username and first_name and last_name and email and password1 and password2):
+            flash("Пожалуйста, заполните все поля.")
+            return redirect(url_for('main.sign_up'))
+
+        # Проверка на совпадение паролей
+        if password1 != password2:
+            flash("Пароли не совпадают.")
+            return redirect(url_for('main.sign_up'))
 
         user = User.query.filter_by(username=username).first()
         if user:
-            flash("This username already exists.")
-            return redirect(url_for('sign_up'))
+            flash("Это имя пользователя уже занято.")
+            return redirect(url_for('main.sign_up'))
 
-        email_exists =User.query.filter_by(email=email).first()
+        email_exists = User.query.filter_by(email=email).first()
         if email_exists:
-            flash("This email is already registered.")
-            return redirect(url_for('sign_up'))
+            flash("Этот адрес электронной почты уже зарегистрирован.")
+            return redirect(url_for('main.sign_up'))
 
         password = generate_password_hash(password1)
         new_user = User(username=username, first_name=first_name, last_name=last_name, email=email, password=password)
         db.session.add(new_user)
         db.session.commit()
         login_user(new_user, remember=True)
-        flash('User created')
+        flash('Пользователь создан.')
         return redirect(url_for('main.home'))
 
     return render_template('sign-up.html', user=current_user)
+
 
 @main.route("/create-posts", methods=['GET', 'POST'])
 @login_required

@@ -113,12 +113,13 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="POST" action="/login">
+            <form id="loginForm" method="POST" action="/login">
                 <div class="modal-body">
+                    <div id="loginError" class="alert alert-danger" style="display: none;"></div>
                     <label for="email" class="modal-label">Электронная почта</label>
                     <input type="email" id="email" name="email" class="form-control" placeholder="Введите адрес электронной почты"/>
                     <label for="password" class="modal-label">Пароль</label>
-                    <input type="password" id="password1" name="password1" class="form-control" placeholder="Введите пароль"/>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Введите пароль"/>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Войти</button>
@@ -127,6 +128,21 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.getElementById("loginForm").addEventListener("submit", function(event) {
+        var email = document.getElementById("email").value;
+        var password = document.getElementById("password").value;
+
+        if (!email || !password) {
+            document.getElementById("loginError").innerHTML = "Пожалуйста, заполните все поля.";
+            document.getElementById("loginError").style.display = "block";
+            event.preventDefault();
+            return;
+        }
+    });
+</script>
+
 
 <!-- Регистрация -->
 <div class="modal fade" id="signUpModal" tabindex="-1" aria-labelledby="signUpModalLabel" aria-hidden="true">
@@ -138,8 +154,9 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="POST" action="/sign-up"> <!-- Добавлен action -->
+            <form id="signupForm" method="POST" action="/sign-up">
                 <div class="modal-body">
+                    <div id="signupError" class="alert alert-danger" style="display: none;"></div>
                     <label for="first_name" class="modal-label">Имя</label>
                     <input type="text" id="first_name" name="first_name" class="form-control" placeholder="Введите имя">
                     <label for="last_name" class="modal-label">Фамилия</label>
@@ -160,3 +177,29 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.getElementById("signupForm").addEventListener("submit", function(event) {
+        var firstName = document.getElementById("first_name").value;
+        var lastName = document.getElementById("last_name").value;
+        var email = document.getElementById("email").value;
+        var username = document.getElementById("username").value;
+        var password1 = document.getElementById("password1").value;
+        var password2 = document.getElementById("password2").value;
+
+        if (!firstName || !lastName || !email || !username || !password1 || !password2) {
+            document.getElementById("signupError").innerHTML = "Пожалуйста, заполните все поля.";
+            document.getElementById("signupError").style.display = "block";
+            event.preventDefault();
+            return;
+        }
+
+        if (password1 !== password2) {
+            document.getElementById("signupError").innerHTML = "Пароли не совпадают.";
+            document.getElementById("signupError").style.display = "block";
+            event.preventDefault();
+            return;
+        }
+    });
+</script>
+

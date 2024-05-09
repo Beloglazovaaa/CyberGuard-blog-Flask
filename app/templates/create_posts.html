@@ -1,24 +1,42 @@
 {% extends "base.html" %}
 {% block title %}Home{% endblock %}
 {% block content %}
-<h3 align="center">Создать пост</h3>
+    <style>
+        .post-container {
+            width: 80%; /* Ширина контейнера поста */
+            margin: 0 auto; /* Центрирование контейнера поста */
+            border: 2px solid #ccc; /* Ширина и цвет рамки */
+            padding: 20px; /* Внутренний отступ контейнера */
+        }
+        textarea {
+            width: 100%; /* 100% ширины текстового поля */
+            height: 200px; /* Высота текстового поля */
+            resize: vertical; /* Разрешить изменение размера только по вертикали */
+        }
+    </style>
 
-<form method="POST">
-    <div class="form-group">
-        <label for="title">Title:</label>
-        <input type="text" name="title" id="title" class="form-control" required>
+    <div class="post-container">
+        <h3 align="center">Create Post</h3>
+
+        <form method="POST">
+            <div class="form-group">
+                <label for="title">Title:</label>
+                <input type="text" name="title" id="title" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="text">Text:</label>
+                <textarea name="text" id="text" class="form-control" required></textarea>
+            </div>
+            <br />
+            <div align="center">
+                <button type="submit" class="btn btn-lg btn-primary">Post</button>
+            </div>
+        </form>
+        <br />
+        <div align="center">
+            <a href="/home">
+                <button type="button" class="btn btn-lg btn-primary">Back</button>
+            </a>
+        </div>
     </div>
-    <div class="form-group">
-        <label for="text">Text:</label>
-        <textarea name="text" id="text" class="form-control" required></textarea>
-    </div>
-    <br />
-    <div align="center">
-        <button type="submit" class="btn btn-lg btn-primary">Post</button>
-    </div>
-</form>
-<br />
-<div align="center">
-    <a href="/home"><button type="button" class="btn btn-lg btn-primary">Back</button></a>
-</div>
 {% endblock %}
