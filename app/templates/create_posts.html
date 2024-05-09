@@ -8,6 +8,7 @@
             border: 2px solid #ccc; /* Ширина и цвет рамки */
             padding: 20px; /* Внутренний отступ контейнера */
         }
+
         textarea {
             width: 100%; /* 100% ширины текстового поля */
             height: 200px; /* Высота текстового поля */
@@ -16,27 +17,28 @@
     </style>
 
     <div class="post-container">
-        <h3 align="center">Create Post</h3>
+        <h3 align="center">Создать пост</h3>
 
         <form method="POST">
             <div class="form-group">
-                <label for="title">Title:</label>
+                <label for="title">Заголовок:</label>
                 <input type="text" name="title" id="title" class="form-control" required>
             </div>
             <div class="form-group">
-                <label for="text">Text:</label>
+                <label for="text">Текст:</label>
                 <textarea name="text" id="text" class="form-control" required></textarea>
             </div>
-            <br />
+            <br/>
             <div align="center">
-                <button type="submit" class="btn btn-lg btn-primary">Post</button>
+                <button type="submit" class="btn btn-lg btn-primary">Выложить</button>
             </div>
         </form>
-        <br />
+        <br/>
         <div align="center">
             <a href="/home">
-                <button type="button" class="btn btn-lg btn-primary">Back</button>
+                <button type="button" class="btn btn-lg btn-primary">Назад</button>
             </a>
         </div>
     </div>
 {% endblock %}
+
