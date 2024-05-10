@@ -253,34 +253,25 @@ def predict_diabetes_gradient():
     return jsonify({'probability': probability})
 
 
-def build_model(input_shape):
-    model = keras.Sequential([
-        SimpleRNN(50, return_sequences=True, input_shape=input_shape),
-        SimpleRNN(50),
-        Dense(1)
-    ])
-    model.compile(optimizer='adam', loss='mean_squared_error')
-    return model
-
-
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
-from tensorflow.keras.models import *
-from tensorflow.keras.layers import Dense
-import keras
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import SimpleRNN, Dense
+from flask import request, jsonify
 
 model = None
 scaler = None
 
 
 def build_model(input_shape):
-    model = keras.Sequential([
+    model = Sequential([
         SimpleRNN(50, return_sequences=True, input_shape=input_shape),
         SimpleRNN(50),
         Dense(1)
     ])
     model.compile(optimizer='adam', loss='mean_squared_error')
     return model
+
 
 @main.route('/train_model_recurrent')
 def train_model_recurrent():
@@ -291,18 +282,26 @@ def train_model_recurrent():
     X = data.drop('Outcome', axis=1)
     y = data['Outcome']
 
+    global scaler, model
+
     # Масштабирование признаков
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
 
+    # Построение и обучение модели
     model = build_model((X_scaled.shape[1], 1))
     model.fit(X_scaled.reshape((X_scaled.shape[0], X_scaled.shape[1], 1)), y, epochs=10, batch_size=32)
+
+    # Сохранение весов модели
     model.save_weights('rnn_model.weights.h5')
 
-    return model, scaler
+    return jsonify({'success': True})
 
 @main.route('/predict_diabetes_recurrent', methods=['POST'])
 def predict_diabetes_recurrent():
+    global scaler, model
+
+    # Получение данных из POST-запроса
     pregnancies = float(request.form.get('pregnancies'))
     glucose = float(request.form.get('glucose'))
     blood_pressure = float(request.form.get('blood-pressure'))
@@ -312,34 +311,30 @@ def predict_diabetes_recurrent():
     diabetes_pedigree_function = float(request.form.get('diabetes-pedigree'))
     age = float(request.form.get('age'))
 
-    global model, scaler
     if request.method == 'POST':
-        if model is None:
-            model = train_model_recurrent()
-        else:
-            model.load_weights('rnn_model.weights.h5')
-
-        # Load scaler object
+        # Проверка инициализации scaler
         if scaler is None:
-            scaler = StandardScaler()  # Assuming you saved the scaler object separately
-
-        # Get input data from POST request
-        input_data = {
-            'pregnancies': float(request.form.get('pregnancies')),
-            'glucose': float(request.form.get('glucose')),
-            'blood_pressure': float(request.form.get('blood-pressure')),
-            'skin_thickness': float(request.form.get('skin-thickness')),
-            'insulin': float(request.form.get('insulin')),
-            'bmi': float(request.form.get('bmi')),
-            'diabetes_pedigree': float(request.form.get('diabetes-pedigree')),
-            'age': float(request.form.get('age'))
-        }
+            return jsonify({'error': 'Scaler is not initialized'})
 
         # Масштабирование входных данных пользователя
+        input_data = {
+            'pregnancies': pregnancies,
+            'glucose': glucose,
+            'blood_pressure': blood_pressure,
+            'skin_thickness': skin_thickness,
+            'insulin': insulin,
+            'bmi': bmi,
+            'diabetes_pedigree': diabetes_pedigree_function,
+            'age': age
+        }
         scaled_input = scaler.transform([list(input_data.values())])
-
-        # Изменение формы входных данных для модели RNN
         reshaped_input = scaled_input.reshape((1, scaled_input.shape[1], 1))
+
+        # Загрузка обученной модели
+        if model is None:
+            return jsonify({'error': 'Model is not trained yet'})
+        else:
+            model.load_weights('rnn_model.weights.h5')
 
         # Предсказание вероятности диабета
         probability = float(model.predict(reshaped_input)[0])
@@ -351,6 +346,7 @@ def predict_diabetes_recurrent():
                                            probability=probability)
         db.session.add(new_diabetes_model)
         db.session.commit()
+
         # Возврат предсказанной вероятности диабета в формате JSON-ответа
         return jsonify({'probability': probability})
     else:
