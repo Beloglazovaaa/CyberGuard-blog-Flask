@@ -1,17 +1,16 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
-from werkzeug.security import check_password_hash, generate_password_hash
 from .models import User, Article, db
+from .security import hash_password, check_password
 
 from . import login_manager
 from flask_login import current_user
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import GradientBoostingClassifier
 import joblib
-
 import keras
-from tensorflow.keras.layers import SimpleRNN
 from tensorflow.keras.models import *
+from tensorflow.keras.layers import SimpleRNN
 from tensorflow.keras.layers import Dense
 
 main = Blueprint('main', __name__)
@@ -36,16 +35,15 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-@main.route("/login", methods = ["GET", "POST"])
+@main.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        email= request.form.get("email")
-        password = request.form.get("password1")
-
+        email = request.form.get("email")
+        password = request.form.get("password")
 
         user = User.query.filter_by(email=email).first()
         if user:
-            if check_password_hash(user.password, password):
+            if check_password(user.password, password):
                 flash("Logged in!", category='success')
                 login_user(user, remember=True)
                 return redirect(url_for('main.home'))
@@ -92,7 +90,7 @@ def sign_up():
             flash("Этот адрес электронной почты уже зарегистрирован.")
             return redirect(url_for('main.sign_up'))
 
-        password = generate_password_hash(password1)
+        password = hash_password(password1)
         new_user = User(username=username, first_name=first_name, last_name=last_name, email=email, password=password)
         db.session.add(new_user)
         db.session.commit()
@@ -162,15 +160,12 @@ def train_model_polynomial():
     return model, scaler
     return "Модель обучена и сохранена."
 
-from .models import DiabetesModel
 from flask import request, jsonify
-import joblib
-
 from . import db
 from .models import DiabetesModel
 
 @main.route('/predict_diabetes_polynomial', methods=['POST'])
-def predict_diabetes_polynomial():
+def predict_diabetes_polynomial(request):
     # Получение данных из POST-запроса
     pregnancies = float(request.form.get('pregnancies'))
     glucose = float(request.form.get('glucose'))
@@ -224,10 +219,8 @@ def train_model_gradient():
     return model, scaler
     return "Модель обучена и сохранена."
 
-from flask import request, jsonify
-
 @main.route('/predict_diabetes_gradient', methods=['POST'])
-def predict_diabetes_gradient():
+def predict_diabetes_gradient(request):
     # Получение данных из POST-запроса
     pregnancies = float(request.form.get('pregnancies'))
     glucose = float(request.form.get('glucose'))
@@ -271,8 +264,9 @@ def build_model(input_shape):
 
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
-from tensorflow import keras
-from keras.layers import SimpleRNN, Dense
+from tensorflow.keras.models import *
+from tensorflow.keras.layers import Dense
+import keras
 
 model = None
 scaler = None
@@ -307,7 +301,7 @@ def train_model_recurrent():
     return model, scaler
 
 @main.route('/predict_diabetes_recurrent', methods=['POST'])
-def predict_diabetes_recurrent():
+def predict_diabetes_recurrent(request):
     pregnancies = float(request.form.get('pregnancies'))
     glucose = float(request.form.get('glucose'))
     blood_pressure = float(request.form.get('blood-pressure'))
