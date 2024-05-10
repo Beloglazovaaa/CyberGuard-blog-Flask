@@ -219,7 +219,6 @@ def train_model_gradient():
 
     # Сохранение обученной модели для последующего использования
     joblib.dump(model, 'gradient_boosting_model.pkl')
-    return model, scaler
     return "Модель обучена и сохранена."
 
 @main.route('/predict_diabetes_gradient', methods=['POST'])
