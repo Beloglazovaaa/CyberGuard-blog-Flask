@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
-from werkzeug.security import check_password_hash, generate_password_hash
 from .models import User, Article, db
+from .security import hash_password, check_password
 
 from . import login_manager
 from flask_login import current_user
@@ -9,21 +9,19 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import GradientBoostingClassifier
 import joblib
 
-import keras
-from tensorflow.keras.layers import SimpleRNN
 from tensorflow.keras.models import *
-from tensorflow.keras.layers import Dense
 
 main = Blueprint('main', __name__)
 
+
 @main.route("/")
 @main.route('/home')
-
 def home():
     page = request.args.get('page', 1, type=int)
     pagination = Article.query.paginate(page=page, per_page=3, error_out=False)
     articles = pagination.items
     return render_template("home.html", articles=articles, user=current_user, pagination=pagination)
+
 
 @main.route('/post/<int:post_id>')
 def post_detail(post_id):
@@ -36,16 +34,15 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-@main.route("/login", methods = ["GET", "POST"])
+@main.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        email= request.form.get("email")
-        password = request.form.get("password1")
-
+        email = request.form.get("email")
+        password = request.form.get("password")
 
         user = User.query.filter_by(email=email).first()
         if user:
-            if check_password_hash(user.password, password):
+            if check_password(user.password, password):
                 flash("Logged in!", category='success')
                 login_user(user, remember=True)
                 return redirect(url_for('main.home'))
@@ -55,12 +52,14 @@ def login():
             flash('Email does not exist.', category='error')
     return render_template("login.html", user=current_user)
 
+
 @main.route("/logout")
 @login_required
 def logout():
     logout_user()
     flash('You have been logged out.', category='success')
     return redirect(url_for('main.home'))
+
 
 @main.route("/sign-up", methods=["GET", "POST"])
 def sign_up():
@@ -92,7 +91,7 @@ def sign_up():
             flash("Этот адрес электронной почты уже зарегистрирован.")
             return redirect(url_for('main.sign_up'))
 
-        password = generate_password_hash(password1)
+        password = hash_password(password1)
         new_user = User(username=username, first_name=first_name, last_name=last_name, email=email, password=password)
         db.session.add(new_user)
         db.session.commit()
@@ -127,18 +126,20 @@ def article(article_id):
     return render_template('posts.html', title=article.title, article=article)
 
 
-
 @main.route('/polynomial_regression')
 def polynomial_regression():
     return render_template('polynomial_regression.html')
+
 
 @main.route('/gradient_boosting')
 def gradient_boosting():
     return render_template('gradient_boosting.html')
 
+
 @main.route('/recurrent_neural_network')
 def recurrent_neural_network():
     return render_template('recurrent_neural_network.html')
+
 
 @main.route('/train_model_polynomial')
 def train_model_polynomial():
@@ -162,9 +163,10 @@ def train_model_polynomial():
     return model, scaler
     return "Модель обучена и сохранена."
 
+
 from .models import DiabetesModel
 from flask import request, jsonify
-import joblib
+
 
 @main.route('/predict_diabetes_polynomial', methods=['POST'])
 def predict_diabetes_polynomial(request):
@@ -197,6 +199,7 @@ def predict_diabetes_polynomial(request):
     # Возврат предсказанной вероятности диабета в формате JSON
     return jsonify({'probability': probability})
 
+
 @main.route('/train_model_gradient')
 def train_model_gradient():
     data = pd.read_csv('myblog/diabetes.csv')
@@ -218,6 +221,7 @@ def train_model_gradient():
     joblib.dump(model, 'gradient_boosting_model.pkl')
     return model, scaler
     return "Модель обучена и сохранена."
+
 
 @main.route('/predict_diabetes_gradient', methods=['POST'])
 def predict_diabetes_gradient(request):
@@ -250,6 +254,7 @@ def predict_diabetes_gradient(request):
     # Возврат предсказанной вероятности диабета в формате JSON
     return jsonify({'probability': probability})
 
+
 def build_model(input_shape):
     model = keras.Sequential([
         SimpleRNN(50, return_sequences=True, input_shape=input_shape),
@@ -260,10 +265,12 @@ def build_model(input_shape):
     return model
 
 
+from tensorflow.keras.layers import SimpleRNN
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
-from tensorflow import keras
-from keras.layers import SimpleRNN, Dense
+from tensorflow.keras.models import *
+from tensorflow.keras.layers import Dense
+import keras
 
 model = None
 scaler = None
@@ -277,6 +284,7 @@ def build_model(input_shape):
     ])
     model.compile(optimizer='adam', loss='mean_squared_error')
     return model
+
 
 @main.route('/train_model_recurrent')
 def train_model_recurrent():
@@ -296,6 +304,7 @@ def train_model_recurrent():
     model.save_weights('rnn_model.weights.h5')
 
     return model, scaler
+
 
 @main.route('/predict_diabetes_recurrent', methods=['POST'])
 def predict_diabetes_recurrent(request):
@@ -349,6 +358,7 @@ def predict_diabetes_recurrent(request):
         return jsonify({'probability': probability})
     else:
         return jsonify({'error': 'Invalid request method'})
+
 
 def get_latest_diabetes_prediction(request):
     if request.method == 'GET':
