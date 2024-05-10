@@ -191,18 +191,25 @@
         </div>
     </div>
 
-    <script>
-        function trainModel() {
-            fetch('/train_model_recurrent', {
-                method: 'GET',
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}' // Include CSRF token in headers
-                }
-            }).then(response => {
-                return response.json(); // Parse response body as JSON
-            })
-        }
-
+       <script>
+    function trainModel() {
+        fetch('/train_model_recurrent', {
+            method: 'GET',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}' // Включаем CSRF токен в заголовки
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            alert('Модель успешно обучена!'); // Оповещаем пользователя об успешном обучении
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+            // Обрабатываем ошибки
+        });
+    }
         document.getElementById('prediction-form').addEventListener('submit', function (event) {
             event.preventDefault(); // Prevent the form from submitting normally
 

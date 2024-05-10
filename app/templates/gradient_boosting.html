@@ -173,48 +173,57 @@
         </div>
     </div>
 
-    <script>
-        function trainModel() {
-            fetch('/train_model_gradient', {
-                method: 'GET',
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}' // Include CSRF token in headers
-                }
-            }).then(response => {
-                return response.json(); // Parse response body as JSON
-            })
-        }
-
-        document.getElementById('prediction-form').addEventListener('submit', function (event) {
-            event.preventDefault(); // Prevent the form from submitting normally
-
-            // Get form data
-            const formData = new FormData(this);
-
-            // Send POST request using Fetch API
-            fetch('/predict_diabetes_gradient', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}' // Include CSRF token in headers
-                }
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json(); // Parse response body as JSON
-                })
-                .then(data => {
-                    const elem = document.getElementById('prediction-result');
-                    elem.textContent = data.probability
-                    const button = document.getElementById('predict-button');
-                    button.disabled = true
-                })
-                .catch(error => {
-                    console.error('There was a problem with the fetch operation:', error);
-                    // Handle errors
-                });
+       <script>
+    function trainModel() {
+        fetch('/train_model_gradient', {
+            method: 'GET',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}' // Включаем CSRF токен в заголовки
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            alert('Модель успешно обучена!'); // Оповещаем пользователя об успешном обучении
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+            // Обрабатываем ошибки
         });
-    </script>
+    }
+
+    document.getElementById('prediction-form').addEventListener('submit', function (event) {
+        event.preventDefault(); // Предотвращаем отправку формы по умолчанию
+
+        // Получаем данные формы
+        const formData = new FormData(this);
+
+        // Отправляем POST запрос с использованием Fetch API
+        fetch('/predict_diabetes_gradient', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}' // Включаем CSRF токен в заголовки
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json(); // Парсим тело ответа как JSON
+        })
+        .then(data => {
+            const elem = document.getElementById('prediction-result');
+            elem.textContent = data.probability;
+            const button = document.getElementById('predict-button');
+            button.disabled = true;
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+            // Обрабатываем ошибки
+        });
+    });
+</script>
+
 {% endblock %}
