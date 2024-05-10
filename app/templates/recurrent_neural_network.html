@@ -39,7 +39,8 @@
             font-family: monospace;
             line-height: 1.5;
             overflow-x: auto;
-            text-align: left; }
+            text-align: left;
+        }
 
         /* Выравниваем текст по левому краю */
     </style>
@@ -150,7 +151,8 @@
 
         <div class="diabetes-prediction">
             <h1>Прогнозирование риска развития диабета</h1>
-            <button class="btn btn-primary" onclick="togglePredictionForm()">Обучить модель</button>
+            <button class="btn btn-primary" onclick="trainModel()">Обучить модель</button>
+            <form id="prediction-form">
                 <div class="form-group">
                     <label for="pregnancies" class="form-label">Количество беременностей:</label>
                     <input class="form-control" type="number" id="pregnancies" name="pregnancies" value="0">
@@ -190,13 +192,15 @@
     </div>
 
     <script>
-        function togglePredictionForm() {
-            var predictionForm = document.getElementById('prediction-form');
-            if (predictionForm.classList.contains('hidden')) {
-                predictionForm.classList.remove('hidden');
-            } else {
-                predictionForm.classList.add('hidden');
-            }
+        function trainModel() {
+            fetch('/train_model_recurrent', {
+                method: 'GET',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}' // Include CSRF token in headers
+                }
+            }).then(response => {
+                return response.json(); // Parse response body as JSON
+            })
         }
 
         document.getElementById('prediction-form').addEventListener('submit', function (event) {
@@ -206,7 +210,7 @@
             const formData = new FormData(this);
 
             // Send POST request using Fetch API
-            fetch('/predict_diabetes_recurrent/', {
+            fetch('/predict_diabetes_recurrent', {
                 method: 'POST',
                 body: formData,
                 headers: {

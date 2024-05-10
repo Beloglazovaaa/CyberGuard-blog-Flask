@@ -140,7 +140,7 @@ def gradient_boosting():
 def recurrent_neural_network():
     return render_template('recurrent_neural_network.html')
 
-@main.route('/train_model_polynomial', methods=['POST'])
+@main.route('/train_model_polynomial')
 def train_model_polynomial():
     data = pd.read_csv('myblog/diabetes.csv')
 
@@ -164,7 +164,7 @@ def train_model_polynomial():
 
 from .models import DiabetesModel
 from flask import request, jsonify
-from sklearn.externals import joblib
+import joblib
 
 @main.route('/predict_diabetes_polynomial', methods=['POST'])
 def predict_diabetes_polynomial(request):
@@ -197,7 +197,7 @@ def predict_diabetes_polynomial(request):
     # Возврат предсказанной вероятности диабета в формате JSON
     return jsonify({'probability': probability})
 
-
+@main.route('/train_model_gradient')
 def train_model_gradient():
     data = pd.read_csv('myblog/diabetes.csv')
 
@@ -219,7 +219,7 @@ def train_model_gradient():
     return model, scaler
     return "Модель обучена и сохранена."
 
-
+@main.route('/predict_diabetes_gradient', methods=['POST'])
 def predict_diabetes_gradient(request):
     # Получение данных из POST-запроса
     pregnancies = float(request.POST.get('pregnancies'))
@@ -278,7 +278,7 @@ def build_model(input_shape):
     model.compile(optimizer='adam', loss='mean_squared_error')
     return model
 
-
+@main.route('/train_model_recurrent')
 def train_model_recurrent():
     # Загрузка данных
     data = pd.read_csv('myblog/diabetes.csv')
@@ -297,7 +297,7 @@ def train_model_recurrent():
 
     return model, scaler
 
-
+@main.route('/predict_diabetes_recurrent', methods=['POST'])
 def predict_diabetes_recurrent(request):
     pregnancies = float(request.POST.get('pregnancies'))
     glucose = float(request.POST['glucose'])
