@@ -138,6 +138,10 @@ def gradient_boosting():
 def recurrent_neural_network():
     return render_template('recurrent_neural_network.html')
 
+
+from flask import jsonify
+
+
 @main.route('/train_model_polynomial')
 def train_model_polynomial():
     data = pd.read_csv('diabetes.csv')
@@ -148,17 +152,17 @@ def train_model_polynomial():
 
     # Масштабирование признаков
     scaler = StandardScaler()
-    scaler.fit(X)
-    X_scaled = scaler.transform(X)
+    X_scaled = scaler.fit_transform(X)
 
     # Создание и обучение модели логистической регрессии
     model = LogisticRegression()
     model.fit(X_scaled, y)
 
     # Сохранение обученной модели для последующего использования
-    joblib.dump(model, 'polynomial_regression_model.pkl')
-    return model, scaler
-    return "Модель обучена и сохранена."
+    joblib.dump((model, scaler), 'polynomial_regression_model.pkl')
+
+    return 'Model trained successfully!'
+
 
 from flask import request, jsonify
 from . import db
@@ -166,6 +170,7 @@ from .models import DiabetesModel
 
 @main.route('/predict_diabetes_polynomial', methods=['POST'])
 def predict_diabetes_polynomial():
+    model, scaler = joblib.load('polynomial_regression_model.pkl')
     # Получение данных из POST-запроса
     pregnancies = float(request.form.get('pregnancies'))
     glucose = float(request.form.get('glucose'))
@@ -176,9 +181,6 @@ def predict_diabetes_polynomial():
     diabetes_pedigree_function = float(request.form.get('diabetes-pedigree'))
     age = float(request.form.get('age'))
 
-    model, scaler = train_model_polynomial()
-
-    model = joblib.load('polynomial_regression_model.pkl')
     # Масштабирование введенных пользователем данных
     user_data = scaler.transform(
         [[pregnancies, glucose, blood_pressure, skin_thickness, insulin, bmi, diabetes_pedigree_function, age]])
@@ -196,6 +198,7 @@ def predict_diabetes_polynomial():
 
     # Возврат предсказанной вероятности диабета в формате JSON
     return jsonify({'probability': probability})
+
 
 @main.route('/train_model_gradient')
 def train_model_gradient():
