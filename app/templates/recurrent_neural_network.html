@@ -79,7 +79,7 @@
     from tensorflow.keras.layers import Dense, SimpleRNN
 
     # Загрузка данных
-    data = pd.read_csv('myblog/diabetes.csv')
+    data = pd.read_csv('diabetes.csv')
 
     # Разделение данных на признаки (X) и целевую переменную (y)
     X = data.drop('Outcome', axis=1).values
