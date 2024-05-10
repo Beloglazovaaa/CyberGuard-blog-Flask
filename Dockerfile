@@ -5,10 +5,10 @@ ENV PYTHONUNBUFFERED 1
 
 WORKDIR /app
 
-COPY ./requirements.txt .
+COPY requirements.txt .
 
 RUN pip install -r requirements.txt
 
-COPY . .
+COPY app/set .
 
 ENTRYPOINT ["python", "-m", "flask", "run", "--host=0.0.0.0", "--port=8000"]

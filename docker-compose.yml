@@ -15,7 +15,7 @@ services:
   web:
     container_name: blog_flask
     image: blog:latest
-    build: .
+    build: app/set
     volumes:
       - flask_blog:/app
     ports:
