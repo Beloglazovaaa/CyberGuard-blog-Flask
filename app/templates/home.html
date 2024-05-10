@@ -30,16 +30,16 @@
     <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
             {% if pagination.has_prev %}
-                <li class="page-item"><a class="page-link" href="{{ url_for('main.home', page=pagination.prev_num) }}">Предыдущая</a>
+                <li class="page-item"><a class="page-link" href="{{ url_for('main.home', page=pagination.prev_num) }}" style="color: white; background-color: #023f02; font-weight: bold;">Предыдущая</a>
                 </li>
             {% endif %}
             {% for page_num in pagination.iter_pages() %}
                 <li class="page-item {{ 'active' if page_num == pagination.page else '' }}">
-                    <a class="page-link" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
+                    <a class="page-link" href="{{ url_for('main.home', page=page_num) }}" style="color: white; background-color: #023f02; font-weight: bold;">{{ page_num }}</a>
                 </li>
             {% endfor %}
             {% if pagination.has_next %}
-                <li class="page-item"><a class="page-link" href="{{ url_for('main.home', page=pagination.next_num) }}">Следующая</a>
+                <li class="page-item"><a class="page-link" href="{{ url_for('main.home', page=pagination.next_num) }}" style="color: white; background-color: #023f02; font-weight: bold;">Следующая</a>
                 </li>
             {% endif %}
         </ul>
@@ -47,7 +47,7 @@
 
     <div align="center">
         <a href="/create-posts">
-            <button type="button" class="btn btn-primary btn-lg">Создать пост</button>
+            <button type="button" class="btn btn-primary btn-lg" style="background-color: #023f02; font-weight: bold;">Создать пост</button>
         </a>
     </div>
 {% endblock %}

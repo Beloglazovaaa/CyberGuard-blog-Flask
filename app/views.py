@@ -5,7 +5,6 @@ from .models import User, Article, db
 
 from . import login_manager
 from flask_login import current_user
-from .models import DiabetesModel
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import GradientBoostingClassifier
 import joblib
@@ -163,6 +162,9 @@ def train_model_polynomial():
     return model, scaler
     return "Модель обучена и сохранена."
 
+from .models import DiabetesModel
+from flask import request, jsonify
+from sklearn.externals import joblib
 
 @main.route('/predict_diabetes_polynomial', methods=['POST'])
 def predict_diabetes_polynomial(request):
@@ -193,7 +195,7 @@ def predict_diabetes_polynomial(request):
                                  probability=probability)
 
     # Возврат предсказанной вероятности диабета в формате JSON
-    return JsonResponse({'probability': probability})
+    return jsonify({'probability': probability})
 
 
 def train_model_gradient():
@@ -246,8 +248,7 @@ def predict_diabetes_gradient(request):
                                  probability=probability)
 
     # Возврат предсказанной вероятности диабета в формате JSON
-    return JsonResponse({'probability': probability})
-
+    return jsonify({'probability': probability})
 
 def build_model(input_shape):
     model = keras.Sequential([
@@ -263,8 +264,6 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from tensorflow import keras
 from keras.layers import SimpleRNN, Dense
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 
 model = None
 scaler = None
@@ -299,7 +298,6 @@ def train_model_recurrent():
     return model, scaler
 
 
-@csrf_exempt
 def predict_diabetes_recurrent(request):
     pregnancies = float(request.POST.get('pregnancies'))
     glucose = float(request.POST['glucose'])
@@ -348,10 +346,9 @@ def predict_diabetes_recurrent(request):
                                      diabetespedigreefunction=diabetes_pedigree_function, age=age,
                                      probability=probability)
         # Возврат предсказанной вероятности диабета в формате JSON-ответа
-        return JsonResponse({'probability': probability})
+        return jsonify({'probability': probability})
     else:
-        return JsonResponse({'error': 'Invalid request method'})
-
+        return jsonify({'error': 'Invalid request method'})
 
 def get_latest_diabetes_prediction(request):
     if request.method == 'GET':
@@ -364,4 +361,4 @@ def get_latest_diabetes_prediction(request):
         }
 
         # Возвращаем JSON-ответ
-        return JsonResponse(response_data)
+        return jsonify(response_data)

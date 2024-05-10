@@ -1,27 +1,23 @@
 <!-- navbar.html -->
 <section class="my-navigation">
-  <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
+  <nav class="navbar navbar-expand-lg bg-white" data-bs-theme="dark">
     <div class="container-fluid">
-        <a href="/" class="navbar-brand">
-            <img src="{{ url_for('static', filename='img/GeekGenius-logo.png') }}" class="d-inline-block align-top" alt="GeekGenius-logo"
-                 width="30" height="30">
-        </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/">Главная</a>
+            <a class="nav-link active" aria-current="page" href="/" style="font-weight: bold;">Главная</a>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownBlog" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownBlog" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-weight: bold;">
               Разделы блога
             </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdownBlog">
-              <li><a class="dropdown-item" href="{{ url_for('main.polynomial_regression') }}">Полиномиальная регрессия</a></li>
-              <li><a class="dropdown-item" href="{{ url_for('main.gradient_boosting') }}">Градиентный бустинг</a></li>
-              <li><a class="dropdown-item" href="{{ url_for('main.recurrent_neural_network') }}">Рекуррентная нейронная сеть</a></li>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownBlog" style="background-color: #ffffff;">
+              <li><a class="dropdown-item" href="{{ url_for('main.polynomial_regression') }}" style="color: #000000;">Полиномиальная регрессия</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('main.gradient_boosting') }}" style="color: #000000;">Градиентный бустинг</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('main.recurrent_neural_network') }}" style="color: #000000;">Рекуррентная нейронная сеть</a></li>
             </ul>
           </li>
         </ul>
@@ -29,11 +25,11 @@
           {% if current_user.is_authenticated %}
             <div class="nav-item">
               <span class="navbar-text me-2">{{ current_user.username }}</span>
-              <a href="/logout" class="btn btn-outline-light">Выход</a>
+              <a href="/logout" class="btn btn-outline-dark" style="font-weight: bold;">Выход</a>
             </div>
           {% else %}
-            <button type="button" class="btn btn-outline-light ms-2" data-bs-toggle="modal" data-bs-target="#loginModal">Войти</button>
-            <button type="button" class="btn btn-outline-light ms-2" data-bs-toggle="modal" data-bs-target="#signUpModal">Регистрация</button>
+            <button type="button" class="btn btn-outline-dark ms-2" data-bs-toggle="modal" data-bs-target="#loginModal" style="font-weight: bold;">Войти</button>
+            <button type="button" class="btn btn-outline-dark ms-2" data-bs-toggle="modal" data-bs-target="#signUpModal" style="font-weight: bold;">Регистрация</button>
           {% endif %}
         </div>
       </div>
@@ -44,8 +40,8 @@
 <style>
     .modal-header, .modal-footer {
         background-color: #f8f9fa;
-        border-bottom: 1px solid #dee2e6;
-        border-top: 1px solid #dee2e6;
+        border-bottom: 1px solid #f8f9fa;
+        border-top: 1px solid #f8f9fa;
     }
 
     .modal-content {
@@ -69,10 +65,11 @@
     }
 
     .close {
-        background-color: #f44336; /* Красный фон кнопки закрытия */
+        background-color: transparent; /* Убираем фон крестика */
         border: none;
         border-radius: 50%; /* Круглая форма */
-        color: white; /* Белый цвет текста */
+        color: black; /* Черный цвет текста */
+        font-weight: bold; /* Жирный шрифт */
         opacity: 1; /* Убрать стандартную полупрозрачность */
     }
 
@@ -82,6 +79,36 @@
 
     .close span {
         font-weight: bold; /* Жирное отображение крестика */
+    }
+
+    .my-navigation .navbar {
+        background-color: #ffffff; /* Белый фон навбара */
+    }
+
+    .my-navigation .navbar-nav .nav-link {
+        color: #000000; /* Черный цвет текста ссылок */
+        font-weight: bold; /* Жирный шрифт */
+    }
+
+    .my-navigation .navbar-nav .nav-link.active {
+        color: #000000; /* Черный цвет активной ссылки */
+    }
+
+    .my-navigation .navbar-toggler-icon {
+        background-color: #000000; /* Черный цвет иконки тогглера */
+    }
+
+    .my-navigation .navbar-toggler {
+        border-color: #000000; /* Черная обводка кнопки тогглера */
+    }
+
+    .my-navigation .navbar-nav .dropdown-menu .dropdown-item {
+        color: #000000; /* Черный цвет текста в выпадающем меню */
+        font-weight: bold; /* Жирный шрифт */
+    }
+
+    .my-navigation .navbar-nav .dropdown-menu .dropdown-item:hover {
+        background-color: #f8f9fa; /* Светло-серый фон при наведении на пункт выпадающего меню */
     }
 </style>
 <!-- Вход в систему -->
@@ -183,4 +210,3 @@
         }
     });
 </script>
-
