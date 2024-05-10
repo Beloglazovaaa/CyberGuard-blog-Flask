@@ -289,7 +289,7 @@ def train_model_recurrent():
     X_scaled = scaler.fit_transform(X)
 
     # Построение и обучение модели
-    model = build_model((X_scaled.shape[1], 1))
+    model = build_model(input_shape=(X_scaled.shape[1], 1))
     model.fit(X_scaled.reshape((X_scaled.shape[0], X_scaled.shape[1], 1)), y, epochs=10, batch_size=32)
 
     # Сохранение весов модели
