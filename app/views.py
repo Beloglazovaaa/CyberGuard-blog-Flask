@@ -165,7 +165,7 @@ from . import db
 from .models import DiabetesModel
 
 @main.route('/predict_diabetes_polynomial', methods=['POST'])
-def predict_diabetes_polynomial(request):
+def predict_diabetes_polynomial():
     # Получение данных из POST-запроса
     pregnancies = float(request.form.get('pregnancies'))
     glucose = float(request.form.get('glucose'))
@@ -220,7 +220,7 @@ def train_model_gradient():
     return "Модель обучена и сохранена."
 
 @main.route('/predict_diabetes_gradient', methods=['POST'])
-def predict_diabetes_gradient(request):
+def predict_diabetes_gradient():
     # Получение данных из POST-запроса
     pregnancies = float(request.form.get('pregnancies'))
     glucose = float(request.form.get('glucose'))
@@ -301,7 +301,7 @@ def train_model_recurrent():
     return model, scaler
 
 @main.route('/predict_diabetes_recurrent', methods=['POST'])
-def predict_diabetes_recurrent(request):
+def predict_diabetes_recurrent():
     pregnancies = float(request.form.get('pregnancies'))
     glucose = float(request.form.get('glucose'))
     blood_pressure = float(request.form.get('blood-pressure'))
