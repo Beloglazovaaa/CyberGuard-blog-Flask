@@ -210,15 +210,14 @@ def train_model_gradient():
 
     # Масштабирование признаков
     scaler = StandardScaler()
-    scaler.fit(X)
-    X_scaled = scaler.transform(X)
+    X_scaled = scaler.fit_transform(X)
 
     # Создание и обучение модели логистической регрессии
     model = GradientBoostingClassifier()
     model.fit(X_scaled, y)
 
     # Сохранение обученной модели для последующего использования
-    joblib.dump(model, 'gradient_boosting_model.pkl')
+    joblib.dump((model, scaler), 'gradient_boosting_model.pkl')
     return "Модель обучена и сохранена."
 
 @main.route('/predict_diabetes_gradient', methods=['POST'])
@@ -233,9 +232,8 @@ def predict_diabetes_gradient():
     diabetes_pedigree_function = float(request.form.get('diabetes-pedigree'))
     age = float(request.form.get('age'))
 
-    model, scaler = train_model_gradient()
+    model, scaler = joblib.load('gradient_boosting_model.pkl')
 
-    model = joblib.load('gradient_boosting_model.pkl')
     # Масштабирование введенных пользователем данных
     user_data = scaler.transform(
         [[pregnancies, glucose, blood_pressure, skin_thickness, insulin, bmi, diabetes_pedigree_function, age]])
@@ -253,6 +251,7 @@ def predict_diabetes_gradient():
 
     # Возврат предсказанной вероятности диабета в формате JSON
     return jsonify({'probability': probability})
+
 
 def build_model(input_shape):
     model = keras.Sequential([
@@ -316,7 +315,7 @@ def predict_diabetes_recurrent():
     global model, scaler
     if request.method == 'POST':
         if model is None:
-            model, scaler = train_model_recurrent()
+            model = train_model_recurrent()
         else:
             model.load_weights('rnn_model.weights.h5')
 
